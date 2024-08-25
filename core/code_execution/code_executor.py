@@ -1,18 +1,14 @@
 from abc import ABC, abstractmethod
+from typing import TypeVar, Generic
+
+InputType = TypeVar('InputType')
+OutputType = TypeVar('OutputType')
 
 
-class CodeExecutionStrategy(ABC):
-    def execute_code(self, code_str: str) -> object:
-        preprocessed_code = self._preprocess_code_input(code_str)
-        execution_output = self._execute(preprocessed_code)
-        return self._postprocess_response(execution_output)
+class CodeExecutionStrategy(ABC, Generic[InputType, OutputType]):
+    def execute_code(self, code_str: str, input: InputType) -> OutputType:
+        return self._execute(code_str, input)
 
     @abstractmethod
-    def _execute(self, code_str: str):
+    def _execute(self, code_str: str, input: InputType) -> OutputType:
         pass
-
-    def _preprocess_code_input(self, input_obj: str) -> str:
-        return input_obj
-
-    def _postprocess_response(self, output_obj: object) -> object:
-        return output_obj
