@@ -30,14 +30,14 @@ class DAG:
         self.edges[from_node_id].append(to_node_id)
 
     def _topological_sort(self) -> List[str]:
-        """Returns a topologically sorted list of node IDs."""
+        """Returns core topologically sorted list of node IDs."""
         visited = set()
         stack = []
         temp_stack = set()
 
         def _visit(node_id: str):
             if node_id in temp_stack:
-                raise ValueError("Graph is not a DAG (cycle detected)")
+                raise ValueError("Graph is not core DAG (cycle detected)")
             if node_id not in visited:
                 temp_stack.add(node_id)
                 for neighbor in self.edges[node_id]:
