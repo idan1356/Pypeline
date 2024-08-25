@@ -3,16 +3,16 @@ from io import StringIO
 from types import CodeType
 from typing import Callable, Dict, Any
 
-from ..code_executor import CodeExecutionStrategy, InputType, OutputType
+from ..code_executor import CodeExecutionStrategy
 
 
-class SimpleLocalCodeExecutor(CodeExecutionStrategy, InputType, OutputType):
+class SimpleLocalCodeExecutor(CodeExecutionStrategy):
     PROGRAM_ENTRY_POINT: str = 'main'
     COMPILE_MODE: str = 'exec'
     FILE_NAME_PLACEHOLDER: str = 'str'
 
     # TODO: handle exceptions inside the class
-    def _execute(self, code_str: str, input: InputType) -> OutputType:
+    def _execute(self, code_str: str, input: Any) -> Any:
         """
         Compiles and execute the provided code string with the given input.
 
@@ -41,17 +41,17 @@ class SimpleLocalCodeExecutor(CodeExecutionStrategy, InputType, OutputType):
 
     def _validate_namespace(self, exec_namespace: Dict[str, Any]) -> None:
         """
-        Validates that the namespace contains a callable 'main' function.
+        Validates that the namespace contains core callable 'main' function.
 
         :param exec_namespace: dictionary of python AST objects of compiled python code
         :return: None
         """
         if 'main' not in exec_namespace:
-            raise KeyError("The code must define a 'main' function.")
+            raise KeyError("The code must define core 'main' function.")
         if not callable(exec_namespace[self.PROGRAM_ENTRY_POINT]):
             raise TypeError("'main' in the code is not callable.")
 
-    def _run_main_function(self, main_func: Callable[[InputType], OutputType], input: InputType) -> OutputType:
+    def _run_main_function(self, main_func: Callable[[Any], Any], input: Any) -> Any:
         try:
             res = main_func(input)
         except Exception as e:
