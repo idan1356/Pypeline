@@ -6,23 +6,22 @@ from typing import Callable, Any, Mapping
 from ..code_executor import CodeExecutionStrategy
 
 
-class PythonLocalCodeExecutor(CodeExecutionStrategy):
+class PythonLocalCodeExecutor(CodeExecutionStrategy[str, Any, Any]):
     PROGRAM_ENTRY_POINT: str = 'main'
     COMPILE_MODE: str = 'exec'
     FILE_NAME_PLACEHOLDER: str = 'str'
 
     # TODO: handle exceptions inside the class
-    def _execute(self, code_str: str, input: Any) -> Any:
+    def _execute(self, execution_context: str, input: Any) -> Any:
         """
         Compiles and execute the provided code string with the given input.
 
-        :param code_str: The python code to be executed. (must have 'main' entrypoint)
+        :param execution_context: The python code to be executed. (must have 'main' entrypoint)
         :param input: The input to be passed to the 'main' function.
-        :return: # TODO: specify return
         """
         exec_namespace = {}
 
-        code = self._compile_code(code_str)
+        code = self._compile_code(execution_context)
         exec(code, exec_namespace)
         self._validate_namespace(exec_namespace)
 

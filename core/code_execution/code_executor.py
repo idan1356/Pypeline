@@ -1,14 +1,15 @@
 from abc import ABC, abstractmethod
 from typing import TypeVar, Generic
 
-InputType = TypeVar('InputType')
-OutputType = TypeVar('OutputType')
+ExecutorInputType = TypeVar('ExecutorInputType')
+ExecutorOutputType = TypeVar('ExecutorOutputType')
+ExecutionContextType = TypeVar('ExecutionContextType')
 
 
-class CodeExecutionStrategy(ABC, Generic[InputType, OutputType]):
-    def execute_code(self, code_str: str, input: InputType) -> OutputType:
-        return self._execute(code_str, input)
+class CodeExecutionStrategy(ABC, Generic[ExecutionContextType, ExecutorInputType, ExecutorOutputType]):
+    def execute_code(self, execution_context: ExecutionContextType, input: ExecutorInputType) -> ExecutorOutputType:
+        return self._execute(execution_context, input)
 
     @abstractmethod
-    def _execute(self, code_str: str, input: InputType) -> OutputType:
+    def _execute(self, execution_context: ExecutionContextType, input: ExecutorInputType) -> ExecutorOutputType:
         pass
