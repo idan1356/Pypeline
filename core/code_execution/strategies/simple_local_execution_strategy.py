@@ -1,12 +1,12 @@
 from contextlib import redirect_stdout
 from io import StringIO
 from types import CodeType
-from typing import Callable, Dict, Any
+from typing import Callable, Any, Mapping
 
 from ..code_executor import CodeExecutionStrategy
 
 
-class SimpleLocalCodeExecutor(CodeExecutionStrategy):
+class PythonLocalCodeExecutor(CodeExecutionStrategy):
     PROGRAM_ENTRY_POINT: str = 'main'
     COMPILE_MODE: str = 'exec'
     FILE_NAME_PLACEHOLDER: str = 'str'
@@ -39,7 +39,7 @@ class SimpleLocalCodeExecutor(CodeExecutionStrategy):
             raise ValueError(f"Syntax error in the provided code: {e}")
         return compiled_code
 
-    def _validate_namespace(self, exec_namespace: Dict[str, Any]) -> None:
+    def _validate_namespace(self, exec_namespace: Mapping[str, Any]) -> None:
         """
         Validates that the namespace contains core callable 'main' function.
 
