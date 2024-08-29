@@ -2,14 +2,14 @@ import pytest
 from typing import Any
 
 from core.code_execution.strategies.simple_local_execution_strategy import PythonLocalCodeExecutor
-from ..conftest import (simple_working_code,
-                        no_main_func_gateway_code1,
-                        no_main_func_gateway_code2,
-                        main_not_callable,
-                        code_runtime_error,
-                        code_syntax_error1,
-                        code_syntax_error2,
-                        code_syntax_error3)
+from tests.conftest import (simple_working_code,
+                            no_main_func_gateway_code1,
+                            no_main_func_gateway_code2,
+                            main_not_callable,
+                            code_runtime_error,
+                            code_syntax_error1,
+                            code_syntax_error2,
+                            code_syntax_error3)
 
 
 @pytest.fixture
