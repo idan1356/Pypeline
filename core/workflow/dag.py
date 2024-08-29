@@ -15,12 +15,16 @@ class DAG:
 
     def __init__(self):
         self._graph: DefaultDict[Hashable, Set[Hashable]] = defaultdict(set)
-        self._in_degrees: DefaultDict[Hashable, int] = defaultdict(int)
+        self._vertex_predecessors: DefaultDict[Hashable, Set[Hashable]] = defaultdict(set)
 
     def add_edge(self, from_node_id: Hashable, to_node: Hashable) -> None:
-        self._in_degrees[to_node] += 1
         self._graph[from_node_id].add(to_node)
         self._graph.setdefault(to_node, set())
+
+        self._vertex_predecessors[to_node].add(from_node_id)
+
+    def predecessors(self, vertex: Hashable) -> Set[Hashable]:
+        return self._vertex_predecessors.get(vertex, set())
 
     def has_cycle(self) -> bool:
         vertex_color_dict = {node: self.VertexType.WHITE for node in self._graph}
@@ -40,11 +44,8 @@ class DAG:
 
         return any(_visit_rec(node) for node in self._graph if vertex_color_dict[node] == self.VertexType.WHITE)
 
-    def _in_degree(self, vertex: Hashable) -> int:
-        return self._in_degrees[vertex]
-
-    def _topological_sort_generator(self) -> Generator[Hashable, None, None]:
-        in_degree = self._in_degrees.copy()
+    def topological_sort(self) -> Generator[Hashable, None, None]:
+        in_degree = {node: len(self._vertex_predecessors[node]) for node in self._graph}
         queue = deque(node for node in self._graph if in_degree[node] == 0)
 
         while queue:

@@ -128,16 +128,14 @@ def test_add_edge_creates_vertices(sample_dag):
         assert char in sample_dag._graph
 
 
-def test_add_edge_increases_in_degree(dag_factory):
+def test_predecessors(dag_factory):
     new_dag = dag_factory(None)
     new_dag.add_edge('A', 'B')
-    assert new_dag._in_degree('A') == 0
-    assert new_dag._in_degree('B') == 1
+    assert new_dag.predecessors('B') == {'A'}
+    assert new_dag.predecessors('A') == set()
     new_dag.add_edge('A', 'C')
     new_dag.add_edge('B', 'C')
-    assert new_dag._in_degree('A') == 0
-    assert new_dag._in_degree('B') == 1
-    assert new_dag._in_degree('C') == 2
+    assert new_dag.predecessors('C') == {'A', 'B'}
 
 
 def test_add_edge_handles_new_nodes(dag_factory):
@@ -156,7 +154,7 @@ def test_dag_has_cycle(dag_factory, test_data):
 @pytest.mark.parametrize("test_data", filter(lambda test_case: not test_case.has_cycle, all_test_data))
 def test_topological_sort_acyclic_graphs(dag_factory, test_data):
     dag = dag_factory(test_data.edges)
-    topological_sort = list(dag._topological_sort_generator())
+    topological_sort = list(dag.topological_sort())
     assert topological_sort in test_data.topological_sort
 
 
@@ -164,4 +162,4 @@ def test_topological_sort_acyclic_graphs(dag_factory, test_data):
 def test_topological_sort_with_cycle_raises_error(dag_factory, test_data):
     dag = dag_factory(test_data.edges)
     with pytest.raises(CycleError):
-        list(dag._topological_sort_generator())
+        list(dag.topological_sort())
